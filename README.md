@@ -6,5 +6,5 @@ Dieses Programm ist das erste, das ich hier hochlade. Außerdem ist "ich" kein e
 ## Was das Programm macht
 Im Rahmen der OpenData-Umstellung beim Vermessungsamt wird das Digitale Geländemodell nicht mehr als Koordinatenliste in verschiedenen Rasterweiten abgegeben, sondern nur noch als GeoTiff-Datei mit 1 m Rasterweite. GeoTiff-Dateien können aber nicht in Stanet eingelesen werden. Der ospConverter setzt mit der gdal-Bibliothek die Dateien um und speichert sie als txt-Datei. Genau genommen erfolgt mit gdal-transform eine Batch-Konvertierung.
 Außerdem können die Rasterweite angepasst werden und die konvertierten Textdateien in eine zusammengefasst werden.
-## INstallation
+## Installation
 Einfach die zip-Datei in ein beliebiges Verzeichnis entpacken und die ospConverter.exe ausführen. Es wird das .NET Framework 7.0 oder höher benötigt.
