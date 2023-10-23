@@ -1,0 +1,92 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters= "clr-namespace:ospConverter.wpfFunc">
+    <SolidColorBrush x:Key="Mango1Brush" Color="#F2B807"/>
+    <SolidColorBrush x:Key="Mango2Brush" Color="#F2A007"/>
+    <SolidColorBrush x:Key="Mango3Brush" Color="#F28907"/>
+    <SolidColorBrush x:Key="Mango4Brush" Color="#D95407"/>
+
+    <converters:HeightToCornerRadiusConverter x:Key="rounder" />
+
+    <Style x:Key="PrimaryButton" TargetType="{x:Type Button}">
+        <Setter Property="Visibility" Value="Visible"/>
+        <!-- <Setter Property="Foreground" Value="White"/> -->
+        <Setter Property="Background" Value="{StaticResource Mango1Brush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Mango4Brush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{StaticResource Mango2Brush}" BorderThickness="1"
+                            CornerRadius="{Binding Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource rounder}}" >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Mango4Brush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Mango3Brush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource Mango3Brush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value=".5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="OutlineRectButton" TargetType="{x:Type Button}">
+        <Setter Property="Visibility" Value="Visible"/>
+        <!-- <Setter Property="Foreground" Value="White"/> -->
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ActiveBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderThickness="1" >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Mango4Brush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Mango3Brush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value=".5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ImageButton" TargetType="{x:Type Button}">
+        <Setter Property="Visibility" Value="Visible"/>
+        <!-- <Setter Property="Foreground" Value="White"/> -->
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource Mango4Brush}" />
+                <Setter Property="TextBlock.FontWeight" Value="Bold" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource Mango3Brush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    
+</ResourceDictionary>

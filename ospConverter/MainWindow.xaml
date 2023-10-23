@@ -4,69 +4,118 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ospConverter"
+        xmlns:converters="clr-namespace:ospConverter.wpfFunc"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" AllowDrop="True" >
+        Title="ospConverter" Height="450" Width="800" AllowDrop="True" Drop="File_Drop" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ospConverter;component/Styles.xaml"/>
-
+                <ResourceDictionary Source="pack://application:,,,/ospConverter;component/wpfFunc/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Grid> <!-- Haupt-Einteilung. Links Drag and Drop-Bereich, rechts Einstellungen -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" BorderBrush="{StaticResource Mango2Brush}"
-                        Margin="32" CornerRadius="4" BorderThickness="1">
+
+            <Border x:Name="InfoArea" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="{StaticResource Mango1Brush}"
+                        Margin="32,32,16,16" CornerRadius="4" BorderThickness="1">
                 <TextBlock Grid.Column="0" Text="GeoTiff-Dateien für die Umsetzung ins Fenster ziehen." 
                            FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
             </Border>
-            <ItemsControl Grid.Column="0" Margin="32" Visibility="Hidden">
-                
-            </ItemsControl>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Border Grid.Row="0" Margin="16,32,32,16" BorderBrush="{StaticResource Mango2Brush}" CornerRadius="4"
-                        BorderThickness="1">
-                    <StackPanel Margin="12">
-                        <TextBlock Text="Gitterweite" HorizontalAlignment="Center" FontSize="18" />
-                        <WrapPanel Margin="0,16,0,0 ">
-                            <RadioButton Content="1 m" Tag="1" Width="100"/>
-                            <RadioButton Content="2 m" Tag="2" Width="100"/>
-                            <RadioButton Content="5 m" Tag="5" Width="100"/>
-                            <RadioButton Content="10 m" Tag="10" Width="100"/>
-                            <RadioButton Content="25 m" Tag="25" Width="100" IsChecked="True" />
+            <Border x:Name="FileArea" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="{StaticResource Mango1Brush}"
+                        Margin="32,32,16,16" CornerRadius="4" BorderThickness="1" Visibility="Hidden">
 
-                        </WrapPanel>
-                    </StackPanel>
-                </Border>
-                <Border Grid.Row="1" Margin="16,16,32,16    " BorderBrush="{StaticResource Mango2Brush}" CornerRadius="4"
-                        BorderThickness="1">
-                    <StackPanel Margin="12">
-                        <TextBlock Text="Exportdatei" Margin="0,0,0,16" HorizontalAlignment="Center" FontSize="18" />
-                        <RadioButton Content="Jede GeoTiff in eine separate txt-Datei konvertieren" IsChecked="True" />
-                        <RadioButton>
-                            <RadioButton.Content>
-                                <StackPanel>
-                                    <TextBlock Text="Alle Dateien zusammenführen" />
-                                    <TextBox />
-                                </StackPanel>
-                            </RadioButton.Content>
-                        </RadioButton>
-                        
-                    </StackPanel>
-                </Border>
-                <Button Grid.Row="2" Content="Button" Margin="16,16,32,32" Width="70" Height="25" Style="{StaticResource StandardButton}" Click="Button_Click"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="FileView" >
+                        <ItemsControl.Resources>
+                            <converters:PathToFilenameConverter x:Key="FilenameConverter" />
+                            <converters:PathToFilesizeConverter x:Key="FilesizeConverter" />
+                        </ItemsControl.Resources>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="10">
+                                        <TextBlock Text="{Binding Converter={StaticResource FilenameConverter}}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding}" Visibility="Hidden" Height="0" />
+                                        <TextBlock Text="{Binding Converter={StaticResource FilesizeConverter}}"/>
 
-            </Grid> 
+                                    </StackPanel>
+
+                                    <Button Name="RemoveItem" Grid.Column="1" Width="24" Height="24" Style="{StaticResource ImageButton}" Click="RemoveItem_Click" >
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="16"/>
+                                    </Button>
+                                </Grid>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Column="1" Grid.Row="0" Margin="16,32,32,16" BorderBrush="{StaticResource Mango1Brush}" CornerRadius="4"
+                        BorderThickness="1">
+                <StackPanel Margin="12">
+                    <TextBlock Text="Gitterweite" HorizontalAlignment="Center" FontSize="18" />
+                    <WrapPanel Name="RasterWidth" Margin="0,16,0,0 ">
+                        <RadioButton Content="1 m" Tag="1" Width="100"/>
+                        <RadioButton Content="2 m" Tag="2" Width="100"/>
+                        <RadioButton Content="5 m" Tag="5" Width="100"/>
+                        <RadioButton Content="10 m" Tag="10" Width="100"/>
+                        <RadioButton Content="25 m" Tag="25" Width="100" IsChecked="True" />
+
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="1" Margin="16,16,32,16    " BorderBrush="{StaticResource Mango1Brush}" CornerRadius="4"
+                        BorderThickness="1">
+                <StackPanel Margin="12">
+                    <TextBlock Text="Exportdatei" Margin="0,0,0,16" HorizontalAlignment="Center" FontSize="18" />
+                    <RadioButton Content="Jede GeoTiff in eine separate Datei konvertieren" IsChecked="True" />
+                    <RadioButton Name="MergeFiles">
+                        <RadioButton.Content>
+                            <StackPanel Width="300" >
+                                <!-- Es ist natürlich nicht schön, die Breite hart reinzuschreiben, aber stretch funktioniert hier nicht.-->
+                                <TextBlock Text="Alle Dateien zusammenführen" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Name="MergedFileName" Grid.Column="0" TextChanged="MergedFileName_TextChanged" />
+                                    <Border Name="MergedFileBorder" Grid.Column="0" BorderBrush="red" BorderThickness="1" Visibility="Hidden" />
+                                    <Button x:Name="FileSelect" Grid.Column="1" Content="..." Width="24" Height="24" Style="{StaticResource OutlineRectButton}" Click="FileSelect_Click" />
+                                </Grid>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+
+                </StackPanel>
+            </Border>
+            <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"  Margin="32,0,32,23">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Name="InfoDialog" Height="32" Width="32" Style="{StaticResource ImageButton}" Click="InfoDialog_Click" >
+                    <Image Grid.Column="0" Source="/images/Logo2021.png"/>
+                </Button>
+                <ProgressBar Grid.Column="1" Name="ConvertProgress" Height="16" Margin="32,0,32,0" Foreground="{StaticResource Mango1Brush}" Visibility="Hidden" />
+                <Button Name="Convert" IsEnabled="False" Grid.Column="2" Content="Konvertieren" Width="90" Height="32" HorizontalAlignment="Right" Style="{StaticResource PrimaryButton}" Click="Convert_Click" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>
